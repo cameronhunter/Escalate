@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Escalate</string>
+
+    <string name="on_call_key">on_call</string>
+    <string name="regex_key">regex</string>
+    <string name="volume_key">volume</string>
+    <string name="ringtone_key">ringtone</string>
+    <string name="vibrate_key">vibrate</string>
+    <string name="notification_light_key">notification_light</string>
+
+    <string name="volume_alarm">Alarm</string>
+    <string name="volume_media">Media</string>
+    <string name="volume_ringer">Ringer</string>
+    
+    <string name="stop_alarm_intent">uk.co.cameronhunter.escalate.stop</string>
+        
+    <string-array name="volumes">
+        <item>Alarm</item>
+        <item>Media</item>
+        <item>Ringer</item>
+    </string-array>
+
+</resources>
