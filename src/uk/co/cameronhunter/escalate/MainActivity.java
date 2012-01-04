@@ -18,15 +18,16 @@ public class MainActivity extends PreferenceActivity {
 		super.onCreate( savedInstanceState );
 		addPreferencesFromResource( R.xml.preferences );
 
-		RingtonePreference ringtone = (RingtonePreference)findPreference( getString( R.string.ringtone_key ) );
+		RingtonePreference ringtone = (RingtonePreference) findPreference( getString( R.string.ringtone_key ) );
 		ringtone.setDefaultValue( RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
-		
+
 		EditTextPreference regex = (EditTextPreference) findPreference( getString( R.string.regex_key ) );
 		regex.setOnPreferenceChangeListener( new OnPreferenceChangeListener() {
+
 			@Override
 			public boolean onPreferenceChange( Preference preference, Object newValue ) {
 				String pattern = (String) newValue;
-				if ( isValidPattern( pattern ) ) {
+				if ( !isBlank( pattern ) && isValidPattern( pattern ) ) {
 					preference.setSummary( pattern );
 					return true;
 				}
@@ -34,7 +35,7 @@ public class MainActivity extends PreferenceActivity {
 			}
 		} );
 
-		if ( regex.getText() != null && regex.getText() != "" ) regex.setSummary( regex.getText() );
+		if ( !isBlank( regex.getText() ) ) regex.setSummary( regex.getText() );
 	}
 
 	private static boolean isValidPattern( String pattern ) {
@@ -47,4 +48,7 @@ public class MainActivity extends PreferenceActivity {
 		}
 	}
 
+	private boolean isBlank( String string ) {
+		return string == null || string.trim().length() == 0;
+	}
 }
