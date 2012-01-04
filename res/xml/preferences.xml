@@ -3,7 +3,7 @@
 	    
     <CheckBoxPreference android:key="@string/on_call_key" android:title="On Call" />
     
-    <PreferenceCategory android:title="Intercepts">
+    <PreferenceCategory android:title="Intercept">
         <EditTextPreference android:key="@string/regex_key" android:title="Regex" android:defaultValue=".*"/>
     </PreferenceCategory>
         
@@ -13,9 +13,17 @@
             				android:showSilent="false"
             				android:ringtoneType="all" />
         
-        <ListPreference android:key="@string/volume_key" android:defaultValue="Alarm" android:entries="@array/volumes" android:entryValues="@array/volumes" android:title="Volume" />
-        <CheckBoxPreference android:key="@string/vibrate_key" android:title="Vibrate" />
-        <CheckBoxPreference android:key="@string/notification_light_key" android:title="Pulse notification light" />
+        <ListPreference android:key="@string/volume_key" 
+            			android:defaultValue="Alarm" 
+            			android:entries="@array/volumes" 
+            			android:entryValues="@array/volumes" 
+            			android:title="Volume" />
+        
+        <CheckBoxPreference android:key="@string/vibrate_key" 
+            				android:title="Vibrate" />
+        
+        <CheckBoxPreference android:key="@string/notification_light_key" 
+            				android:title="Pulse notification light" />
     </PreferenceCategory>
     
 </PreferenceScreen>
