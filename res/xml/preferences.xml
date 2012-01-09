@@ -26,4 +26,15 @@
             				android:title="Pulse notification light" />
     </PreferenceCategory>
     
+    <PreferenceCategory android:title="On call settings">
+        <CheckBoxPreference android:key="@string/show_notification_key" 
+            				android:title="Show reminder"
+            				android:summary="Keep on-call reminder in notification bar" />
+        
+        <EditTextPreference android:key="@string/notification_message_key"
+            				android:title="Reminder message"
+            				android:defaultValue="@string/notification_message_default"
+            				android:dependency="@string/show_notification_key" />
+    </PreferenceCategory>
+    
 </PreferenceScreen>

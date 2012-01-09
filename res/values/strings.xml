@@ -9,6 +9,10 @@
     <string name="ringtone_key">ringtone</string>
     <string name="vibrate_key">vibrate</string>
     <string name="notification_light_key">notification_light</string>
+    <string name="show_notification_key">show_notification</string>
+    <string name="notification_message_key">notification_message_key</string>
+    
+    <string name="notification_message_default">"Don't forget — you're on-call!"</string>
 
     <string name="volume_alarm">Alarm</string>
     <string name="volume_media">Media</string>

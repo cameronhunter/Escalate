@@ -1,0 +1,8 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin" android:background="@drawable/appwidget_dark_bg_clickable" android:clickable="true">
+
+	<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+	    <ImageView android:src="@android:drawable/ic_dialog_alert" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" />
+	</RelativeLayout>    
+    	      
+</FrameLayout>
