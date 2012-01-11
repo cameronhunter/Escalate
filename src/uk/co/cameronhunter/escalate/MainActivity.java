@@ -1,11 +1,10 @@
 package uk.co.cameronhunter.escalate;
 
+import static uk.co.cameronhunter.utils.StringUtils.isBlank;
+
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import uk.co.cameronhunter.adapters.notificationBuilder.NotificationBuilder;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Bundle;
@@ -49,9 +48,11 @@ public class MainActivity extends PreferenceActivity {
 		OnPreferenceChangeListener onPreferenceChangeListener = new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange( Preference preference, Object newValue ) {
 				if ( Boolean.TRUE.equals( (Boolean) newValue && (onCallEnabled.isChecked() || showReminder.isChecked()) ) ) {
-					updateReminderNotification( reminderMessage.getText() );
+					Intent updateReminder = new Intent(getString( R.string.update_reminder_intent ));
+					updateReminder.putExtra( getString( R.string.notification_message_key ), reminderMessage.getText() );
+					sendBroadcast( updateReminder );
 				} else {
-					removeReminderNotification();
+					sendBroadcast( new Intent( getString( R.string.remove_reminder_intent ) ) );
 				}
 				return true;
 			}
@@ -68,8 +69,9 @@ public class MainActivity extends PreferenceActivity {
 				preference.setSummary( message );
 
 				if ( onCallEnabled.isChecked() && showReminder.isChecked() ) {
-					removeReminderNotification();
-					updateReminderNotification( message );
+					Intent updateReminder = new Intent(getString( R.string.update_reminder_intent ));
+					updateReminder.putExtra( getString( R.string.notification_message_key ), message );
+					sendBroadcast( updateReminder );
 				}
 
 				return true;
@@ -79,26 +81,8 @@ public class MainActivity extends PreferenceActivity {
 		reminderMessage.setSummary( isBlank( reminderMessage.getText() ) ? getString( R.string.notification_message_default ) : reminderMessage.getText() );
 
 		if ( onCallEnabled.isChecked() && showReminder.isChecked() ) {
-			updateReminderNotification( reminderMessage.getText() );
+			sendBroadcast( new Intent( getString( R.string.update_reminder_intent ) ) );
 		}
-	}
-
-	private void updateReminderNotification( String message ) {
-		NotificationManager notificationManger = (NotificationManager) getSystemService( NOTIFICATION_SERVICE );
-
-		NotificationBuilder builder = NotificationBuilder.create( this );
-
-		builder.setContentTitle( isBlank( message ) ? getString( R.string.notification_message_default ) : message );
-		builder.setSmallIcon( android.R.drawable.ic_dialog_info );
-		builder.setContentIntent( PendingIntent.getActivity( this, 0, new Intent( this, MainActivity.class ), 0 ) );
-		builder.setOngoing( true );
-
-		notificationManger.notify( "reminder", 1, builder.getNotification() );
-	}
-
-	private void removeReminderNotification() {
-		NotificationManager notificationManger = (NotificationManager) getSystemService( NOTIFICATION_SERVICE );
-		notificationManger.cancel( "reminder", 1 );
 	}
 
 	private static boolean isValidPattern( String pattern ) {
@@ -110,7 +94,4 @@ public class MainActivity extends PreferenceActivity {
 		}
 	}
 
-	private boolean isBlank( String string ) {
-		return string == null || string.trim().length() == 0;
-	}
 }

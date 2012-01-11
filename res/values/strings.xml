@@ -19,6 +19,8 @@
     <string name="volume_ringer">Ringer</string>
     
     <string name="stop_alarm_intent">uk.co.cameronhunter.escalate.stop</string>
+    <string name="update_reminder_intent">uk.co.cameronhunter.escalate.updateReminder</string>
+    <string name="remove_reminder_intent">uk.co.cameronhunter.escalate.removeReminder</string>
         
     <string-array name="volumes">
         <item>Alarm</item>
