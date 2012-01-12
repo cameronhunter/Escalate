@@ -20,7 +20,12 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
-		addPreferencesFromResource( R.xml.preferences );
+
+		if ( android.os.Build.VERSION.SDK_INT < 14 || getApplicationInfo().targetSdkVersion < 14 ) {
+			addPreferencesFromResource( R.xml.preferences );
+		} else {
+			addPreferencesFromResource( R.xml.preferences14 );
+		}
 
 		RingtonePreference ringtone = (RingtonePreference) findPreference( getString( R.string.ringtone_key ) );
 		ringtone.setDefaultValue( RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
@@ -41,14 +46,14 @@ public class MainActivity extends PreferenceActivity {
 			regex.setSummary( regex.getText() );
 		}
 
-		final CheckBoxPreference onCallEnabled = (CheckBoxPreference) findPreference( getString( R.string.on_call_key ) );
+		final Preference onCallEnabled = findPreference( getString( R.string.on_call_key ) );
 		final CheckBoxPreference showReminder = (CheckBoxPreference) findPreference( getString( R.string.show_notification_key ) );
 		final EditTextPreference reminderMessage = (EditTextPreference) findPreference( getString( R.string.notification_message_key ) );
 
 		OnPreferenceChangeListener onPreferenceChangeListener = new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange( Preference preference, Object newValue ) {
-				if ( Boolean.TRUE.equals( (Boolean) newValue && (onCallEnabled.isChecked() || showReminder.isChecked()) ) ) {
-					Intent updateReminder = new Intent(getString( R.string.update_reminder_intent ));
+				if ( Boolean.TRUE.equals( (Boolean) newValue && (isChecked( onCallEnabled ) || showReminder.isChecked()) ) ) {
+					Intent updateReminder = new Intent( getString( R.string.update_reminder_intent ) );
 					updateReminder.putExtra( getString( R.string.notification_message_key ), reminderMessage.getText() );
 					sendBroadcast( updateReminder );
 				} else {
@@ -68,8 +73,8 @@ public class MainActivity extends PreferenceActivity {
 
 				preference.setSummary( message );
 
-				if ( onCallEnabled.isChecked() && showReminder.isChecked() ) {
-					Intent updateReminder = new Intent(getString( R.string.update_reminder_intent ));
+				if ( isChecked( onCallEnabled ) && showReminder.isChecked() ) {
+					Intent updateReminder = new Intent( getString( R.string.update_reminder_intent ) );
 					updateReminder.putExtra( getString( R.string.notification_message_key ), message );
 					sendBroadcast( updateReminder );
 				}
@@ -80,9 +85,21 @@ public class MainActivity extends PreferenceActivity {
 
 		reminderMessage.setSummary( isBlank( reminderMessage.getText() ) ? getString( R.string.notification_message_default ) : reminderMessage.getText() );
 
-		if ( onCallEnabled.isChecked() && showReminder.isChecked() ) {
+		if ( isChecked( onCallEnabled ) && showReminder.isChecked() ) {
 			sendBroadcast( new Intent( getString( R.string.update_reminder_intent ) ) );
 		}
+	}
+
+	private boolean isChecked( Preference preference ) {
+		if ( preference instanceof CheckBoxPreference ) {
+			return ((CheckBoxPreference) preference).isChecked();
+		} else {
+			try {
+				Class<?> clazz = Class.forName( "android.preference.SwitchPreference" );
+				return (Boolean) clazz.getMethod( "isChecked" ).invoke( preference );
+			} catch ( Exception e ) {}
+		}
+		throw new RuntimeException( "Not supported preference" );
 	}
 
 	private static boolean isValidPattern( String pattern ) {
