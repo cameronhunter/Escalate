@@ -32,7 +32,7 @@ public class SmsReceiver extends BroadcastReceiver {
 		for ( int i = 0; i < pdus.length; i++ ) {
 			SmsMessage message = SmsMessage.createFromPdu( (byte[]) pdus[i] );
 			Matcher matcher = regex.matcher( message.getMessageBody() );
-			if ( matcher.matches() ) {
+			if ( matcher.find() ) {
 				Intent escalateIntent = new Intent( context, EscalateReceiver.class );
 				escalateIntent.putExtra( "sender", message.getOriginatingAddress() );
 				escalateIntent.putExtra( "body", message.getMessageBody() );
@@ -47,7 +47,9 @@ public class SmsReceiver extends BroadcastReceiver {
 
 	private Pattern getRegex( Context context, SharedPreferences preferences ) {
 		String regexString = preferences.getString( context.getString( R.string.regex_key ), null );
-		if ( regexString == null ) return null;
+		if ( regexString == null ) {
+			return null;
+		}
 
 		try {
 			return Pattern.compile( regexString, Pattern.CASE_INSENSITIVE );
