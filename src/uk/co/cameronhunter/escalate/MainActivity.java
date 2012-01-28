@@ -1,5 +1,6 @@
 package uk.co.cameronhunter.escalate;
 
+import static uk.co.cameronhunter.adapters.booleanPreference.BooleanPreference.isChecked;
 import static uk.co.cameronhunter.utils.StringUtils.isBlank;
 
 import java.util.regex.Pattern;
@@ -52,7 +53,7 @@ public class MainActivity extends PreferenceActivity {
 
 		OnPreferenceChangeListener onPreferenceChangeListener = new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange( Preference preference, Object newValue ) {
-				if ( Boolean.TRUE.equals( (Boolean) newValue && (isChecked( onCallEnabled ) || showReminder.isChecked()) ) ) {
+				if ( Boolean.TRUE.equals( (Boolean) newValue && (isChecked( onCallEnabled ) || isChecked( showReminder )) ) ) {
 					Intent updateReminder = new Intent( getString( R.string.update_reminder_intent ) );
 					updateReminder.putExtra( getString( R.string.notification_message_key ), reminderMessage.getText() );
 					sendBroadcast( updateReminder );
@@ -73,7 +74,7 @@ public class MainActivity extends PreferenceActivity {
 
 				preference.setSummary( message );
 
-				if ( isChecked( onCallEnabled ) && showReminder.isChecked() ) {
+				if ( isChecked( onCallEnabled ) && isChecked( showReminder ) ) {
 					Intent updateReminder = new Intent( getString( R.string.update_reminder_intent ) );
 					updateReminder.putExtra( getString( R.string.notification_message_key ), message );
 					sendBroadcast( updateReminder );
@@ -85,21 +86,9 @@ public class MainActivity extends PreferenceActivity {
 
 		reminderMessage.setSummary( isBlank( reminderMessage.getText() ) ? getString( R.string.notification_message_default ) : reminderMessage.getText() );
 
-		if ( isChecked( onCallEnabled ) && showReminder.isChecked() ) {
+		if ( isChecked( onCallEnabled ) && isChecked( showReminder ) ) {
 			sendBroadcast( new Intent( getString( R.string.update_reminder_intent ) ) );
 		}
-	}
-
-	private boolean isChecked( Preference preference ) {
-		if ( preference instanceof CheckBoxPreference ) {
-			return ((CheckBoxPreference) preference).isChecked();
-		} else {
-			try {
-				Class<?> clazz = Class.forName( "android.preference.SwitchPreference" );
-				return (Boolean) clazz.getMethod( "isChecked" ).invoke( preference );
-			} catch ( Exception e ) {}
-		}
-		throw new RuntimeException( "Not supported preference" );
 	}
 
 	private static boolean isValidPattern( String pattern ) {

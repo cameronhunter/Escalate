@@ -22,12 +22,17 @@ public class ReminderReceiver extends BroadcastReceiver {
 
 		String action = intent.getAction();
 
-		boolean updateReminderIntent = context.getString( R.string.update_reminder_intent ).equals( action ) || ACTION_BOOT_COMPLETED.equals( action );
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context );
+
+		boolean updateReminderIntent = context.getString( R.string.update_reminder_intent ).equals( action );
 		boolean removeReminderIntent = !updateReminderIntent && context.getString( R.string.remove_reminder_intent ).equals( action );
+
+		if ( ACTION_BOOT_COMPLETED.equals( action ) ) {
+
+		}
 
 		NotificationManager notificationManger = (NotificationManager) context.getSystemService( NOTIFICATION_SERVICE );
 		if ( updateReminderIntent ) {
-			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context );
 
 			String key = context.getString( R.string.notification_message_key );
 
