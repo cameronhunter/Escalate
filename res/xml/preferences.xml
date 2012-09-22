@@ -10,7 +10,7 @@
     <PreferenceCategory android:title="Alert settings">
         <RingtonePreference android:key="@string/ringtone_key" 
             				android:title="Ringtone" 
-            				android:showSilent="false"
+            				android:showSilent="true"
             				android:ringtoneType="all" />
         
         <ListPreference android:key="@string/volume_key" 

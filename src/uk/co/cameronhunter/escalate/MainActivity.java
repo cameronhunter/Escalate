@@ -25,11 +25,7 @@ public class MainActivity extends PreferenceActivity {
     public void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
 
-        if ( android.os.Build.VERSION.SDK_INT < 14 ) {
-            addPreferencesFromResource( R.xml.preferences );
-        } else {
-            addPreferencesFromResource( R.xml.preferences14 );
-        }
+        addPreferencesFromResource( R.xml.preferences );
 
         RingtonePreference ringtone = (RingtonePreference) findPreference( getString( R.string.ringtone_key ) );
         ringtone.setDefaultValue( RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
