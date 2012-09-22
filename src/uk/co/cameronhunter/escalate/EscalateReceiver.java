@@ -1,6 +1,8 @@
 package uk.co.cameronhunter.escalate;
 
 import static android.app.Notification.PRIORITY_MAX;
+import static android.content.Intent.ACTION_MAIN;
+import static android.content.Intent.CATEGORY_APP_MESSAGING;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -69,9 +71,16 @@ public class EscalateReceiver extends BroadcastReceiver {
         // Stop intent
         Intent intent = new Intent( context, EscalateReceiver.class );
         intent.putExtra( "stop", true );
-        PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
+
+        // Open Messaging Intent
+        Intent smsIntent = new Intent( ACTION_MAIN );
+        smsIntent.addCategory( CATEGORY_APP_MESSAGING );
+        PendingIntent smsPendingIntent = PendingIntent.getActivity( context, 0, smsIntent, 0 );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder( context );
+
+        String tickerText = context.getString( R.string.notification_subtext, sender );
 
         builder.setSmallIcon( android.R.drawable.ic_dialog_alert ) //
                 .setAutoCancel( true ) //
@@ -82,16 +91,17 @@ public class EscalateReceiver extends BroadcastReceiver {
                 .setUsesChronometer( true ) //
                 .setPriority( PRIORITY_MAX ) //
                 .setLargeIcon( BitmapFactory.decodeResource( context.getResources(), android.R.drawable.ic_dialog_alert ) ) //
-                .setSubText( context.getString( R.string.notification_subtext, sender ) ) //
-                .setContentIntent( pendingIntent ) //
-                .setDeleteIntent( pendingIntent );
+                .setTicker( tickerText ) //
+                .setSubText( tickerText ) //
+                .setContentIntent( smsPendingIntent ) //
+                .setDeleteIntent( stopPendingIntent );
 
         if ( vibrate ) {
             builder.setVibrate( new long[] { 0, 800, 500, 800 } );
         }
 
         if ( notificationLight ) {
-            builder.setLights( android.R.color.holo_red_light, 1000, 100 );
+            builder.setLights( 0x00ff0000, 100, 100 );
         }
 
         BigTextStyle bigNotification = new NotificationCompat.BigTextStyle( builder ).bigText( message );
