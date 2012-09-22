@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.co.cameronhunter.escalate"
     android:versionCode="10009"
-    android:versionName="2.0" >
+    android:versionName="2.0.0" >
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16" />
 
