@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
+import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver {
 
@@ -48,14 +49,20 @@ public class SmsReceiver extends BroadcastReceiver {
 	private Pattern getRegex( Context context, SharedPreferences preferences ) {
 		String regexString = preferences.getString( context.getString( R.string.regex_key ), null );
 		if ( regexString == null ) {
-			return null;
+			return invalid( context );
 		}
 
 		try {
 			return Pattern.compile( regexString, Pattern.CASE_INSENSITIVE );
 		}
 		catch ( PatternSyntaxException e ) {
-			return null;
+			return invalid( context );
 		}
+	}
+	
+	private Pattern invalid( Context context ) {
+	    Toast toast = Toast.makeText( context, R.string.invalid_regex, Toast.LENGTH_LONG );
+        toast.show();
+	    return null;
 	}
 }
