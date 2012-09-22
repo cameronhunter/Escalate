@@ -18,9 +18,9 @@ public class SmsReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive( Context context, Intent intent ) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context.getApplicationContext() );
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context );
 
-		boolean onCall = preferences.getBoolean( context.getApplicationContext().getString( R.string.on_call_key ), false );
+		boolean onCall = preferences.getBoolean( context.getString( R.string.on_call_key ), false );
 		Pattern regex = getRegex( context, preferences );
 
 		if ( !onCall || regex == null ) { return; }

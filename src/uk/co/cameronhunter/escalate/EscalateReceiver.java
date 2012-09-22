@@ -1,5 +1,6 @@
 package uk.co.cameronhunter.escalate;
 
+import static android.app.Notification.PRIORITY_MAX;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,82 +9,102 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
 import android.util.Log;
 
 public class EscalateReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive( Context context, Intent intent ) {
+    @Override
+    public void onReceive( Context context, Intent intent ) {
 
-		if ( intent.getBooleanExtra( "stop", false ) ) {
-			Log.i( "Receiver", "Cancelling alarms" );
-			AlarmManager alarms = (AlarmManager) context.getSystemService( Context.ALARM_SERVICE );
-			PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
-			alarms.cancel( pendingIntent );
-			return;
-		}
+        if ( intent.getBooleanExtra( "stop", false ) ) {
+            Log.i( "Receiver", "Cancelling alarms" );
+            AlarmManager alarms = (AlarmManager) context.getSystemService( Context.ALARM_SERVICE );
+            PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
+            alarms.cancel( pendingIntent );
+            return;
+        }
 
-		String sender = intent.getStringExtra( "sender" );
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context.getApplicationContext() );
-		notification( "Escalate", String.format( "Message from %s has been escalated", sender ), context, preferences );
-	}
+        String sender = intent.getStringExtra( "sender" );
+        String message = intent.getStringExtra( "body" );
 
-	private Notification buildNotification( String title, SharedPreferences preferences, Context context ) {
-		Notification notification = new Notification( android.R.drawable.ic_dialog_alert, title, System.currentTimeMillis() );
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context.getApplicationContext() );
+        notification( "Escalate", sender, message, context, preferences );
+    }
 
-		notification.flags |= Notification.FLAG_INSISTENT;
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+    private void notification( String title, String sender, String message, Context context, SharedPreferences preferences ) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService( Context.NOTIFICATION_SERVICE );
 
-		// Setup ringtone
-		String ringtone = preferences.getString( context.getString( R.string.ringtone_key ), RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
-		notification.sound = Uri.parse( ringtone );
+        Notification notification = buildNotification( title, sender, message, preferences, context );
 
-		// Setup volume
-		String volumePref = preferences.getString( context.getString( R.string.volume_key ), context.getString( R.string.volume_alarm ) );
-		int volume = AudioManager.STREAM_ALARM;
-		if ( context.getString( R.string.volume_media ).equals( volumePref ) ) {
-			volume = AudioManager.STREAM_MUSIC;
-		} else if ( context.getString( R.string.volume_ringer ).equals( volumePref ) ) {
-			volume = AudioManager.STREAM_RING;
-		}
-		notification.audioStreamType = volume;
+        notificationManager.notify( 1, notification );
+    }
 
-		// Setup vibrate
-		boolean vibrate = preferences.getBoolean( context.getString( R.string.vibrate_key ), false );
-		if ( vibrate ) {
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
-			notification.vibrate = new long[] { 0, 800, 500, 800 };
-		}
+    private static Notification buildNotification( String title, String sender, String message, SharedPreferences preferences, Context context ) {
 
-		// Setup notification light
-		boolean notificationLight = preferences.getBoolean( context.getString( R.string.notification_light_key ), false );
-		if ( notificationLight ) {
-			notification.defaults |= Notification.DEFAULT_LIGHTS;
-			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-			notification.ledARGB = 0xff0000;
-			notification.ledOnMS = 1000;
-			notification.ledOffMS = 100;
-		}
+        // Setup ringtone
+        String ringtone = preferences.getString( context.getString( R.string.ringtone_key ), RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
 
-		return notification;
-	}
+        // Setup volume
+        String volumePref = preferences.getString( context.getString( R.string.volume_key ), context.getString( R.string.volume_alarm ) );
+        int volume = AudioManager.STREAM_ALARM;
+        if ( context.getString( R.string.volume_media ).equals( volumePref ) ) {
+            volume = AudioManager.STREAM_MUSIC;
+        } else if ( context.getString( R.string.volume_ringer ).equals( volumePref ) ) {
+            volume = AudioManager.STREAM_RING;
+        }
 
-	private void notification( String title, String message, Context context, SharedPreferences preferences ) {
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService( Context.NOTIFICATION_SERVICE );
+        // Setup vibrate
+        boolean vibrate = preferences.getBoolean( context.getString( R.string.vibrate_key ), false );
 
-		Notification notification = buildNotification( title, preferences, context );
+        // Setup notification light
+        boolean notificationLight = preferences.getBoolean( context.getString( R.string.notification_light_key ), false );
 
-		Intent intent = new Intent( context, EscalateReceiver.class );
-		intent.putExtra( "stop", true );
-		PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
-		
-		notification.deleteIntent = pendingIntent;
-		notification.setLatestEventInfo( context, title, message, pendingIntent );
-		notificationManager.notify( 1, notification );
-	}
+        // Stop intent
+        Intent intent = new Intent( context, EscalateReceiver.class );
+        intent.putExtra( "stop", true );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( context );
+
+        builder.setSmallIcon( android.R.drawable.ic_dialog_alert ) //
+                .setAutoCancel( true ) //
+                .setContentTitle( title ) //
+                .setContentText( message ) //
+                .setSound( Uri.parse( ringtone ), volume ) //
+                .setWhen( System.currentTimeMillis() ) //
+                .setUsesChronometer( true ) //
+                .setPriority( PRIORITY_MAX ) //
+                .setLargeIcon( BitmapFactory.decodeResource( context.getResources(), android.R.drawable.ic_dialog_alert ) ) //
+                .setSubText( context.getString( R.string.notification_subtext, sender ) ) //
+                .setContentIntent( pendingIntent ) //
+                .setDeleteIntent( pendingIntent );
+
+        if ( vibrate ) {
+            builder.setVibrate( new long[] { 0, 800, 500, 800 } );
+        }
+
+        if ( notificationLight ) {
+            builder.setLights( android.R.color.holo_red_light, 1000, 100 );
+        }
+
+        BigTextStyle bigNotification = new NotificationCompat.BigTextStyle( builder ).bigText( message );
+
+        Notification notification = bigNotification.build();
+
+        if ( notificationLight ) {
+            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+        }
+
+        notification.flags |= Notification.FLAG_INSISTENT;
+
+        return notification;
+    }
 
 }

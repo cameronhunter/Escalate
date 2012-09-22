@@ -3,6 +3,8 @@
 
     <string name="app_name">Escalate</string>
 
+    <string name="notification_subtext">Page from %s</string>
+    
     <string name="on_call_key">on_call</string>
     <string name="regex_key">regex</string>
     <string name="volume_key">volume</string>
