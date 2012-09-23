@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item type="id" name="on_call_key" />
-    <item type="id" name="regex_key" />
-    <item type="id" name="volume_key" />
-    <item type="id" name="ringtone_key" />
-    <item type="id" name="vibrate_key" />
-    <item type="id" name="notification_light_key" />
-    <item type="id" name="show_notification_key" />
-    <item type="id" name="notification_message_key" />
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item type="id" name="on_call_key">on_call_key</item>
+    <item type="id" name="regex_key">regex_key</item>
+    <item type="id" name="volume_key">volume_key</item>
+    <item type="id" name="ringtone_key">ringtone_key</item>
+    <item type="id" name="vibrate_key">vibrate_key</item>
+    <item type="id" name="notification_light_key">notification_light_key</item>
+    <item type="id" name="show_notification_key">show_notification_key</item>
+    <item type="id" name="notification_message_key">notification_message_key</item>
+    
+    <item type="id" name="sender_intent_extra">sender</item>
+    <item type="id" name="body_intent_extra">body</item>
+    <item type="id" name="stop_intent_extra">stop</item>
 </resources>

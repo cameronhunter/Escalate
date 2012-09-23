@@ -33,11 +33,11 @@ public class EscalateReceiver extends BroadcastReceiver {
             return;
         }
 
-        String sender = intent.getStringExtra( "sender" );
-        String message = intent.getStringExtra( "body" );
+        String sender = intent.getStringExtra( context.getString( R.id.sender_intent_extra ) );
+        String message = intent.getStringExtra( context.getString( R.id.body_intent_extra ) );
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context.getApplicationContext() );
-        notification( "Escalate", sender, message, context, preferences );
+        notification( context.getString( R.string.app_name ), sender, message, context, preferences );
     }
 
     private void notification( String title, String sender, String message, Context context, SharedPreferences preferences ) {
@@ -70,7 +70,7 @@ public class EscalateReceiver extends BroadcastReceiver {
 
         // Stop intent
         Intent intent = new Intent( context, EscalateReceiver.class );
-        intent.putExtra( "stop", true );
+        intent.putExtra( context.getString( R.id.stop_intent_extra ), true );
         PendingIntent stopPendingIntent = PendingIntent.getBroadcast( context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
 
         // Open Messaging Intent

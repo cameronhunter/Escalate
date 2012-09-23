@@ -35,8 +35,8 @@ public class SmsReceiver extends BroadcastReceiver {
 			Matcher matcher = regex.matcher( message.getMessageBody() );
 			if ( matcher.find() ) {
 				Intent escalateIntent = new Intent( context, EscalateReceiver.class );
-				escalateIntent.putExtra( "sender", message.getOriginatingAddress() );
-				escalateIntent.putExtra( "body", message.getMessageBody() );
+				escalateIntent.putExtra( context.getString( R.id.sender_intent_extra ), message.getOriginatingAddress() );
+				escalateIntent.putExtra( context.getString( R.id.body_intent_extra ), message.getMessageBody() );
 
 				AlarmManager alarms = (AlarmManager) context.getSystemService( Context.ALARM_SERVICE );
 				PendingIntent annoy = PendingIntent.getBroadcast( context, 0, escalateIntent, PendingIntent.FLAG_CANCEL_CURRENT );
