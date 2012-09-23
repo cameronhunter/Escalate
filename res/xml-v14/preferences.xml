@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	    
-    <SwitchPreference android:key="@string/on_call_key" android:title="On Call" />
+    <SwitchPreference android:key="@id/on_call_key" android:title="On Call" />
     
     <PreferenceCategory android:title="Intercept">
-        <EditTextPreference android:key="@string/regex_key" android:title="Regex" android:defaultValue=".*"/>
+        <EditTextPreference android:key="@id/regex_key" android:title="Regex" android:defaultValue=".*"/>
     </PreferenceCategory>
         
     <PreferenceCategory android:title="Alert settings">
-        <RingtonePreference android:key="@string/ringtone_key" 
+        <RingtonePreference android:key="@id/ringtone_key" 
             				android:title="Ringtone" 
             				android:showSilent="true"
             				android:ringtoneType="all" />
         
-        <ListPreference android:key="@string/volume_key" 
+        <ListPreference android:key="@id/volume_key" 
             			android:defaultValue="Alarm" 
             			android:entries="@array/volumes" 
             			android:entryValues="@array/volumes" 
             			android:title="Volume" />
         
-        <CheckBoxPreference android:key="@string/vibrate_key" 
+        <CheckBoxPreference android:key="@id/vibrate_key" 
             				android:title="Vibrate" />
         
-        <CheckBoxPreference android:key="@string/notification_light_key" 
+        <CheckBoxPreference android:key="@id/notification_light_key" 
             				android:title="Pulse notification light" />
     </PreferenceCategory>
     
     <PreferenceCategory android:title="On call settings">
-        <CheckBoxPreference android:key="@string/show_notification_key" 
+        <CheckBoxPreference android:key="@id/show_notification_key" 
             				android:title="Show reminder"
             				android:summary="Keep on-call reminder in notification bar" />
         
-        <EditTextPreference android:key="@string/notification_message_key"
+        <EditTextPreference android:key="@id/notification_message_key"
             				android:title="Reminder message"
             				android:defaultValue="@string/notification_message_default"
-            				android:dependency="@string/show_notification_key" />
+            				android:dependency="@id/show_notification_key" />
     </PreferenceCategory>
     
 </PreferenceScreen>

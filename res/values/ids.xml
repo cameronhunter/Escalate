@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="on_call_key" />
+    <item type="id" name="regex_key" />
+    <item type="id" name="volume_key" />
+    <item type="id" name="ringtone_key" />
+    <item type="id" name="vibrate_key" />
+    <item type="id" name="notification_light_key" />
+    <item type="id" name="show_notification_key" />
+    <item type="id" name="notification_message_key" />
+</resources>

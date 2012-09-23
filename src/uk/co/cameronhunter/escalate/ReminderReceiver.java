@@ -2,6 +2,8 @@ package uk.co.cameronhunter.escalate;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Intent.ACTION_BOOT_COMPLETED;
+import static android.content.Intent.ACTION_DELETE;
+import static android.content.Intent.ACTION_INSERT_OR_EDIT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,14 +24,14 @@ public class ReminderReceiver extends BroadcastReceiver {
 
 		String action = intent.getAction();
 
-		boolean showReminderIntent = context.getString( R.string.update_reminder_intent ).equals( action );
-		boolean removeReminderIntent = !showReminderIntent && context.getString( R.string.remove_reminder_intent ).equals( action );
+		boolean showReminderIntent = ACTION_INSERT_OR_EDIT.equals( action );
+		boolean removeReminderIntent = !showReminderIntent && ACTION_DELETE.equals( action );
 
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context );
 
 		if ( ACTION_BOOT_COMPLETED.equals( action ) ) {
-			boolean onCall = preferences.getBoolean( context.getString( R.string.on_call_key ), false );
-			boolean showNotification = preferences.getBoolean( context.getString( R.string.show_notification_key ), false );
+			boolean onCall = preferences.getBoolean( context.getString( R.id.on_call_key ), false );
+			boolean showNotification = preferences.getBoolean( context.getString( R.id.show_notification_key ), false );
 			if ( onCall && showNotification ) {
 				showReminderIntent = true;
 				removeReminderIntent = false;
@@ -42,7 +44,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 		NotificationManager notificationManger = (NotificationManager) context.getSystemService( NOTIFICATION_SERVICE );
 		if ( showReminderIntent ) {
 
-			String key = context.getString( R.string.notification_message_key );
+			String key = context.getString( R.id.notification_message_key );
 
 			String message = null;
 			if ( intent.hasExtra( key ) ) {

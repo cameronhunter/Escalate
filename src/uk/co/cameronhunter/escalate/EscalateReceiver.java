@@ -51,10 +51,10 @@ public class EscalateReceiver extends BroadcastReceiver {
     private static Notification buildNotification( String title, String sender, String message, SharedPreferences preferences, Context context ) {
 
         // Setup ringtone
-        String ringtone = preferences.getString( context.getString( R.string.ringtone_key ), RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
+        String ringtone = preferences.getString( context.getString( R.id.ringtone_key ), RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
 
         // Setup volume
-        String volumePref = preferences.getString( context.getString( R.string.volume_key ), context.getString( R.string.volume_alarm ) );
+        String volumePref = preferences.getString( context.getString( R.id.volume_key ), context.getString( R.string.volume_alarm ) );
         int volume = AudioManager.STREAM_ALARM;
         if ( context.getString( R.string.volume_media ).equals( volumePref ) ) {
             volume = AudioManager.STREAM_MUSIC;
@@ -63,10 +63,10 @@ public class EscalateReceiver extends BroadcastReceiver {
         }
 
         // Setup vibrate
-        boolean vibrate = preferences.getBoolean( context.getString( R.string.vibrate_key ), false );
+        boolean vibrate = preferences.getBoolean( context.getString( R.id.vibrate_key ), false );
 
         // Setup notification light
-        boolean notificationLight = preferences.getBoolean( context.getString( R.string.notification_light_key ), false );
+        boolean notificationLight = preferences.getBoolean( context.getString( R.id.notification_light_key ), false );
 
         // Stop intent
         Intent intent = new Intent( context, EscalateReceiver.class );

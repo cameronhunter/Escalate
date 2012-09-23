@@ -21,7 +21,7 @@ public class SmsReceiver extends BroadcastReceiver {
 	public void onReceive( Context context, Intent intent ) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context );
 
-		boolean onCall = preferences.getBoolean( context.getString( R.string.on_call_key ), false );
+		boolean onCall = preferences.getBoolean( context.getString( R.id.on_call_key ), false );
 		Pattern regex = getRegex( context, preferences );
 
 		if ( !onCall || regex == null ) { return; }
@@ -47,7 +47,7 @@ public class SmsReceiver extends BroadcastReceiver {
 	}
 
 	private Pattern getRegex( Context context, SharedPreferences preferences ) {
-		String regexString = preferences.getString( context.getString( R.string.regex_key ), null );
+		String regexString = preferences.getString( context.getString( R.id.regex_key ), null );
 		if ( regexString == null ) {
 			return invalid( context );
 		}

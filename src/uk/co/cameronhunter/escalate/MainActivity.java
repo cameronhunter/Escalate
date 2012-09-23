@@ -1,5 +1,7 @@
 package uk.co.cameronhunter.escalate;
 
+import static android.content.Intent.ACTION_DELETE;
+import static android.content.Intent.ACTION_INSERT_OR_EDIT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -27,10 +29,10 @@ public class MainActivity extends PreferenceActivity {
 
         addPreferencesFromResource( R.xml.preferences );
 
-        RingtonePreference ringtone = (RingtonePreference) findPreference( getString( R.string.ringtone_key ) );
+        RingtonePreference ringtone = (RingtonePreference) findPreference( getString( R.id.ringtone_key ) );
         ringtone.setDefaultValue( RingtoneManager.getDefaultUri( RingtoneManager.TYPE_ALARM ).toString() );
 
-        EditTextPreference regex = (EditTextPreference) findPreference( getString( R.string.regex_key ) );
+        EditTextPreference regex = (EditTextPreference) findPreference( getString( R.id.regex_key ) );
         regex.setOnPreferenceChangeListener( new OnPreferenceChangeListener() {
             public boolean onPreferenceChange( Preference preference, Object newValue ) {
                 String pattern = (String) newValue;
@@ -46,18 +48,18 @@ public class MainActivity extends PreferenceActivity {
             regex.setSummary( regex.getText() );
         }
 
-        final Preference onCallEnabled = findPreference( getString( R.string.on_call_key ) );
-        final CheckBoxPreference showReminder = (CheckBoxPreference) findPreference( getString( R.string.show_notification_key ) );
-        final EditTextPreference reminderMessage = (EditTextPreference) findPreference( getString( R.string.notification_message_key ) );
+        final Preference onCallEnabled = findPreference( getString( R.id.on_call_key ) );
+        final CheckBoxPreference showReminder = (CheckBoxPreference) findPreference( getString( R.id.show_notification_key ) );
+        final EditTextPreference reminderMessage = (EditTextPreference) findPreference( getString( R.id.notification_message_key ) );
 
         OnPreferenceChangeListener onPreferenceChangeListener = new OnPreferenceChangeListener() {
             public boolean onPreferenceChange( Preference preference, Object newValue ) {
                 if ( Boolean.TRUE.equals( (Boolean) newValue && (isChecked( onCallEnabled ) || isChecked( showReminder )) ) ) {
-                    Intent updateReminder = new Intent( getString( R.string.update_reminder_intent ) );
-                    updateReminder.putExtra( getString( R.string.notification_message_key ), reminderMessage.getText() );
+                    Intent updateReminder = new Intent( ACTION_INSERT_OR_EDIT );
+                    updateReminder.putExtra( getString( R.id.notification_message_key ), reminderMessage.getText() );
                     sendBroadcast( updateReminder );
                 } else {
-                    sendBroadcast( new Intent( getString( R.string.remove_reminder_intent ) ) );
+                    sendBroadcast( new Intent( ACTION_DELETE ) );
                 }
                 return true;
             }
@@ -74,8 +76,8 @@ public class MainActivity extends PreferenceActivity {
                 preference.setSummary( message );
 
                 if ( isChecked( onCallEnabled ) && isChecked( showReminder ) ) {
-                    Intent updateReminder = new Intent( getString( R.string.update_reminder_intent ) );
-                    updateReminder.putExtra( getString( R.string.notification_message_key ), message );
+                    Intent updateReminder = new Intent( ACTION_INSERT_OR_EDIT );
+                    updateReminder.putExtra( getString( R.id.notification_message_key ), message );
                     sendBroadcast( updateReminder );
                 }
 
@@ -86,7 +88,7 @@ public class MainActivity extends PreferenceActivity {
         reminderMessage.setSummary( isBlank( reminderMessage.getText() ) ? getString( R.string.notification_message_default ) : reminderMessage.getText() );
 
         if ( isChecked( onCallEnabled ) && isChecked( showReminder ) ) {
-            sendBroadcast( new Intent( getString( R.string.update_reminder_intent ) ) );
+            sendBroadcast( new Intent( ACTION_INSERT_OR_EDIT ) );
         }
     }
 

@@ -32,8 +32,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="uk.co.cameronhunter.escalate.updateReminder" />
-                <action android:name="uk.co.cameronhunter.escalate.removeReminder"/>
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
+                <action android:name="android.intent.action.DELETE"/>
             </intent-filter>
         </receiver>
         
